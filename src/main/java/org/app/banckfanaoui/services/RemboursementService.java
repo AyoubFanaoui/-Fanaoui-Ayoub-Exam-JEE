@@ -18,42 +18,40 @@ public class RemboursementService {
 
     private final RemboursementRepository remboursementRepository;
     private final CreditRepository creditRepository;
-    private final RemboursementMapper remboursementMapper;
 
-    public RemboursementService(RemboursementRepository remboursementRepository, CreditRepository creditRepository, RemboursementMapper remboursementMapper) {
+    public RemboursementService(RemboursementRepository remboursementRepository, CreditRepository creditRepository) {
         this.remboursementRepository = remboursementRepository;
         this.creditRepository = creditRepository;
-        this.remboursementMapper = remboursementMapper;
-    }
-
-    public RemboursementDTO createRemboursement(RemboursementDTO dto) {
-        Remboursement remboursement = remboursementMapper.toEntity(dto);
-
-        // gestion liaison credit
-        Credit credit = creditRepository.findById(dto.getCreditId())
-                .orElseThrow(() -> new RuntimeException("Crédit non trouvé"));
-        remboursement.setCredit(credit);
-
-        remboursement = remboursementRepository.save(remboursement);
-        return remboursementMapper.toDto(remboursement);
-    }
-
-    public RemboursementDTO getRemboursement(Long id) {
-        return remboursementRepository.findById(id)
-                .map(remboursementMapper::toDto)
-                .orElseThrow(() -> new RuntimeException("Remboursement non trouvé"));
     }
 
     public List<RemboursementDTO> getAllRemboursements() {
-        return remboursementRepository.findAll().stream()
-                .map(remboursementMapper::toDto)
+        return remboursementRepository.findAll()
+                .stream()
+                .map(RemboursementMapper::toDTO)
                 .collect(Collectors.toList());
+    }
+
+    public RemboursementDTO getRemboursementById(Long id) {
+        Remboursement remboursement = remboursementRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Remboursement not found"));
+        return RemboursementMapper.toDTO(remboursement);
+    }
+
+    public RemboursementDTO saveRemboursement(RemboursementDTO dto) {
+        Remboursement remboursement = RemboursementMapper.toEntity(dto);
+
+        if (dto.getCreditId() != null) {
+            Credit credit = creditRepository.findById(dto.getCreditId())
+                    .orElseThrow(() -> new RuntimeException("Credit not found"));
+            remboursement.setCredit(credit);
+        }
+
+        Remboursement savedRemboursement = remboursementRepository.save(remboursement);
+        return RemboursementMapper.toDTO(savedRemboursement);
     }
 
     public void deleteRemboursement(Long id) {
         remboursementRepository.deleteById(id);
     }
-
-
 }
 

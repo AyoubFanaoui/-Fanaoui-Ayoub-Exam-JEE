@@ -3,16 +3,31 @@ package org.app.banckfanaoui.mappers;
 import org.app.banckfanaoui.dtos.RemboursementDTO;
 import org.app.banckfanaoui.entites.Remboursement;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring")
-public interface RemboursementMapper {
+public class RemboursementMapper {
 
-    @Mapping(target = "creditId", source = "credit.id")
-    RemboursementDTO toDto(Remboursement remboursement);
+    public static RemboursementDTO toDTO(Remboursement remboursement) {
+        RemboursementDTO dto = new RemboursementDTO();
+        dto.setId(remboursement.getId());
+        dto.setDate(remboursement.getDate());
+        dto.setMontant(remboursement.getMontant());
+        dto.setType(remboursement.getType());
 
-    @Mapping(target = "credit", ignore = true) // à gérer dans service
-    Remboursement toEntity(RemboursementDTO dto);
+        if (remboursement.getCredit() != null) {
+            dto.setCreditId(remboursement.getCredit().getId());
+        }
+
+        return dto;
+    }
+
+    public static Remboursement toEntity(RemboursementDTO dto) {
+        Remboursement remboursement = new Remboursement();
+        remboursement.setId(dto.getId());
+        remboursement.setDate(dto.getDate());
+        remboursement.setMontant(dto.getMontant());
+        remboursement.setType(dto.getType());
+        // Credit à gérer dans la couche service
+        return remboursement;
+    }
 }
 

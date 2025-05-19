@@ -18,42 +18,42 @@ import java.util.stream.Collectors;
 @Service
 public class CreditService {
 
-    private CreditRepository creditRepository;
-    private final org.app.banckfanaoui.respositories.ClientRepository clientRepository;
-    private final CreditMapper creditMapper;
+    private final CreditRepository creditRepository;
+    private final ClientRepository clientRepository;
 
-    public CreditService(CreditRepository creditRepository, ClientRepository clientRepository, CreditMapper creditMapper) {
+    public CreditService(CreditRepository creditRepository, ClientRepository clientRepository) {
         this.creditRepository = creditRepository;
         this.clientRepository = clientRepository;
-        this.creditMapper = creditMapper;
-    }
-
-    public CreditDTO createCredit(CreditDTO dto) {
-        Credit credit = creditMapper.toEntity(dto);
-        // gérer la liaison client
-        Client client = clientRepository.findById(dto.getClientId())
-                .orElseThrow(() -> new RuntimeException("Client non trouvé"));
-        credit.setClient(client);
-
-        credit = creditRepository.save(credit);
-        return creditMapper.toDto(credit);
-    }
-
-    public CreditDTO getCredit(Long id) {
-        return creditRepository.findById(id)
-                .map(creditMapper::toDto)
-                .orElseThrow(() -> new RuntimeException("Crédit non trouvé"));
     }
 
     public List<CreditDTO> getAllCredits() {
-        return creditRepository.findAll().stream()
-                .map(creditMapper::toDto)
+        return creditRepository.findAll()
+                .stream()
+                .map(CreditMapper::toDTO)
                 .collect(Collectors.toList());
+    }
+
+    public CreditDTO getCreditById(Long id) {
+        Credit credit = creditRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Credit not found"));
+        return CreditMapper.toDTO(credit);
+    }
+
+    public CreditDTO saveCredit(CreditDTO dto) {
+        Credit credit = CreditMapper.toEntity(dto);
+
+        // Rattacher le client à l'entité credit
+        if (dto.getClientId() != null) {
+            Client client = clientRepository.findById(dto.getClientId())
+                    .orElseThrow(() -> new RuntimeException("Client not found"));
+            credit.setClient(client);
+        }
+
+        Credit savedCredit = creditRepository.save(credit);
+        return CreditMapper.toDTO(savedCredit);
     }
 
     public void deleteCredit(Long id) {
         creditRepository.deleteById(id);
     }
-
-
 }

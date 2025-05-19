@@ -5,41 +5,39 @@ import org.app.banckfanaoui.entites.Client;
 import org.app.banckfanaoui.mappers.ClientMapper;
 import org.app.banckfanaoui.respositories.ClientRepository;
 import org.springframework.stereotype.Service;
-import java.util.List;
+import java.util.*;
 
 import java.util.stream.Collectors;
+
 @Service
 public class ClientService {
 
     private final ClientRepository clientRepository;
-    private final ClientMapper clientMapper;
 
-    public ClientService(ClientRepository clientRepository, ClientMapper clientMapper) {
+    public ClientService(ClientRepository clientRepository) {
         this.clientRepository = clientRepository;
-        this.clientMapper = clientMapper;
-    }
-
-    public ClientDTO createClient(ClientDTO dto) {
-        Client client = clientMapper.toEntity(dto);
-        client = clientRepository.save(client);
-        return clientMapper.toDto(client);
-    }
-
-    public ClientDTO getClient(Long id) {
-        return clientRepository.findById(id)
-                .map(clientMapper::toDto)
-                .orElseThrow(() -> new RuntimeException("Client non trouvé"));
     }
 
     public List<ClientDTO> getAllClients() {
-        return clientRepository.findAll().stream()
-                .map(clientMapper::toDto)
+        return clientRepository.findAll()
+                .stream()
+                .map(ClientMapper::toDTO)
                 .collect(Collectors.toList());
+    }
+
+    public ClientDTO getClientById(Long id) {
+        Client client = clientRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Client not found"));
+        return ClientMapper.toDTO(client);
+    }
+
+    public ClientDTO saveClient(ClientDTO dto) {
+        Client client = ClientMapper.toEntity(dto);
+        Client savedClient = clientRepository.save(client);
+        return ClientMapper.toDTO(savedClient);
     }
 
     public void deleteClient(Long id) {
         clientRepository.deleteById(id);
     }
-
-    // ajouter d'autres méthodes métier si nécessaire
 }

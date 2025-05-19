@@ -37,31 +37,31 @@ public class BanckFanaouiApplication  implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         // Créer un client
-        Client client = new Client();
-        client.setNom("Fanaoui");
-        client.setEmail("fanaoui@example.com");
-        client = clientRepository.save(client);
-
-        // Créer un crédit
-        Credit credit = new CreditPersonnel();
-        credit.setClient(client);
-        credit.setDateDemande(LocalDate.now().minusDays(5));
-        credit.setMontant(100000.0);
-        credit.setTauxInteret(5.5);
-        credit.setDureeRemboursement(36);
-        credit.setStatut(StatutCredit.EN_COURS);
-        ((CreditPersonnel) credit).setMotif("Achat voiture");  // propriété spécifique au crédit personnel
-        credit = creditRepository.save(credit);
-
-        // Créer un remboursement
-        Remboursement r1 = new Remboursement();
-        r1.setCredit(credit);
-        r1.setDate(LocalDate.now());
-        r1.setMontant(2800.0);
-        r1.setType(TypeRemboursement.MENSUALITE);
-        remboursementRepository.save(r1);
-
-        System.out.println("Données de test insérées avec succès !");
+//        Client client = new Client();
+//        client.setNom("Fanaoui");
+//        client.setEmail("fanaoui@example.com");
+//        client = clientRepository.save(client);
+//
+//        // Créer un crédit
+//        Credit credit = new CreditPersonnel();
+//        credit.setClient(client);
+//        credit.setDateDemande(LocalDate.now().minusDays(5));
+//        credit.setMontant(100000.0);
+//        credit.setTauxInteret(5.5);
+//        credit.setDureeRemboursement(36);
+//        credit.setStatut(StatutCredit.EN_COURS);
+//        ((CreditPersonnel) credit).setMotif("Achat voiture");  // propriété spécifique au crédit personnel
+//        credit = creditRepository.save(credit);
+//
+//        // Créer un remboursement
+//        Remboursement r1 = new Remboursement();
+//        r1.setCredit(credit);
+//        r1.setDate(LocalDate.now());
+//        r1.setMontant(2800.0);
+//        r1.setType(TypeRemboursement.MENSUALITE);
+//        remboursementRepository.save(r1);
+//
+//        System.out.println("Données de test insérées avec succès !");
     }
 }
 

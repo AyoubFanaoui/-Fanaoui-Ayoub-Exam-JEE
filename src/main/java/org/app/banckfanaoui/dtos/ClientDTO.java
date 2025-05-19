@@ -8,7 +8,5 @@ public class ClientDTO {
     private Long id;
     private String nom;
     private String email;
-    private List<Long> creditIds;
-
-    // Getters & Setters
+    private List<Long> creditIds; // Liste des IDs de crédits
 }
