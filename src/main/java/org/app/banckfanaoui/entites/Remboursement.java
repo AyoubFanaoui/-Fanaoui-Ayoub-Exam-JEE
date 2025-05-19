@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.app.banckfanaoui.enums.TypeRemboursement;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
 @Data
@@ -25,6 +26,8 @@ public class Remboursement {
     @ManyToOne
     @JoinColumn(name = "credit_id")
     private Credit credit;
+
+
 
     // Getters & Setters
 }

@@ -1,13 +1,22 @@
 package org.app.banckfanaoui.dtos;
 
-import lombok.Data;
 
-import java.util.Date;
 
-@Data
+import java.time.LocalDate;
+
+import org.app.banckfanaoui.enums.TypeRemboursement;
+
 public class RemboursementDTO {
     private Long id;
-    private Date dateRemboursement;
+    private LocalDate date;
     private double montant;
-    private CreditDTO credit;
+    private TypeRemboursement type;
+
+    private Long creditId;
+
+    public Long getCreditId() {
+        return creditId;
+    }
+
+    // Getters & Setters
 }
